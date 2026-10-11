@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/config/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Activity,
@@ -94,8 +95,8 @@ export default function BusinessHealthCheckupPage() {
     setLoading(true);
 
     try {
-      // Connects live to our Express backend API endpoint (Section 27)
-      const res = await fetch('http://127.0.0.1:5000/api/health-checkup', {
+      // Connects live to our Express backend API endpoint
+      const res = await fetch(`${API_BASE_URL}/api/health-checkup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

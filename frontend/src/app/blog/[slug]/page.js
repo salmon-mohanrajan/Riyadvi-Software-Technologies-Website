@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { blogData } from '@/data/blogData';
+import { API_BASE_URL } from '@/config/api';
 import { 
   Calendar, 
   Clock, 
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }) {
 async function ArticleContent({ slug }) {
   let post = null;
   try {
-    const res = await fetch('http://127.0.0.1:5000/api/content/articles', { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}/api/content/articles`, { cache: 'no-store' });
     const json = await res.json();
     if (json.success && json.data) {
       post = json.data.find((p) => p.slug === slug);

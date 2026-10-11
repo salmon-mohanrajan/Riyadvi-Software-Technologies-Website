@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/config/api';
 import { motion } from 'framer-motion';
 import {
   BookOpen,
@@ -39,8 +40,8 @@ export default function SoftwareProjectPlanningGuidePage() {
     setLoading(true);
 
     try {
-      // Connects live to our Express backend endpoint (Section 27)
-      const res = await fetch('http://127.0.0.1:5000/api/lead-magnet', {
+      // Connects live to our Express backend endpoint
+      const res = await fetch(`${API_BASE_URL}/api/lead-magnet`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

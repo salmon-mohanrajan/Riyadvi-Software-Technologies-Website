@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { API_BASE_URL } from '@/config/api';
 import {
   ShieldCheck,
   Activity,
@@ -67,36 +68,36 @@ export default function AdminDashboardPage() {
     setLoading(true);
     try {
       // Metrics
-      const metricsRes = await fetch('http://127.0.0.1:5000/api/admin/metrics');
+      const metricsRes = await fetch(`${API_BASE_URL}/api/admin/metrics`);
       const metricsJson = await metricsRes.json();
       if (metricsJson.success) setMetrics(metricsJson.data);
 
       // Inquiries
-      const inqRes = await fetch('http://127.0.0.1:5000/api/admin/inquiries');
+      const inqRes = await fetch(`${API_BASE_URL}/api/admin/inquiries`);
       const inqJson = await inqRes.json();
       if (inqJson.success) setInquiries(inqJson.data);
 
       // Health Checkups
-      const hcRes = await fetch('http://127.0.0.1:5000/api/admin/health-checkups');
+      const hcRes = await fetch(`${API_BASE_URL}/api/admin/health-checkups`);
       const hcJson = await hcRes.json();
       if (hcJson.success) setHealthCheckups(hcJson.data);
 
       // Applications
-      const appRes = await fetch('http://127.0.0.1:5000/api/admin/applications');
+      const appRes = await fetch(`${API_BASE_URL}/api/admin/applications`);
       const appJson = await appRes.json();
       if (appJson.success) setApplications(appJson.data);
 
       // Lead Magnets
-      const lmRes = await fetch('http://127.0.0.1:5000/api/admin/lead-magnets');
+      const lmRes = await fetch(`${API_BASE_URL}/api/admin/lead-magnets`);
       const lmJson = await lmRes.json();
       if (lmJson.success) setLeadMagnets(lmJson.data);
 
       // Content CRUD data
       const [sRes, pRes, aRes, jRes] = await Promise.all([
-        fetch('http://127.0.0.1:5000/api/content/services'),
-        fetch('http://127.0.0.1:5000/api/content/projects'),
-        fetch('http://127.0.0.1:5000/api/content/articles'),
-        fetch('http://127.0.0.1:5000/api/content/jobs'),
+        fetch(`${API_BASE_URL}/api/content/services`),
+        fetch(`${API_BASE_URL}/api/content/projects`),
+        fetch(`${API_BASE_URL}/api/content/articles`),
+        fetch(`${API_BASE_URL}/api/content/jobs`),
       ]);
 
       const sData = await sRes.json();
@@ -122,7 +123,7 @@ export default function AdminDashboardPage() {
   // Update status of an inquiry live in MongoDB
   const updateInquiryStatus = async (id, status) => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/admin/inquiries/${id}/status`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/inquiries/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -215,10 +216,10 @@ export default function AdminDashboardPage() {
 
     try {
       const endpointMap = {
-        service: `http://127.0.0.1:5000/api/content/services/${id}`,
-        project: `http://127.0.0.1:5000/api/content/projects/${id}`,
-        article: `http://127.0.0.1:5000/api/content/articles/${id}`,
-        job: `http://127.0.0.1:5000/api/content/jobs/${id}`,
+        service: `${API_BASE_URL}/api/content/services/${id}`,
+        project: `${API_BASE_URL}/api/content/projects/${id}`,
+        article: `${API_BASE_URL}/api/content/articles/${id}`,
+        job: `${API_BASE_URL}/api/content/jobs/${id}`,
       };
 
       const res = await fetch(endpointMap[type], { method: 'DELETE' });
@@ -246,10 +247,10 @@ export default function AdminDashboardPage() {
 
     try {
       const endpointBaseMap = {
-        service: 'http://127.0.0.1:5000/api/content/services',
-        project: 'http://127.0.0.1:5000/api/content/projects',
-        article: 'http://127.0.0.1:5000/api/content/articles',
-        job: 'http://127.0.0.1:5000/api/content/jobs',
+        service: `${API_BASE_URL}/api/content/services`,
+        project: `${API_BASE_URL}/api/content/projects`,
+        article: `${API_BASE_URL}/api/content/articles`,
+        job: `${API_BASE_URL}/api/content/jobs`,
       };
 
       const url =
@@ -321,7 +322,7 @@ export default function AdminDashboardPage() {
             </h1>
           </div>
           <p className="text-xs text-gray-400 mt-1">
-            Connected Live to Express &amp; MongoDB Microservice API (<code>http://127.0.0.1:5000</code>)
+            Connected Live to Express &amp; MongoDB Microservice API (<code>{API_BASE_URL}</code>)
           </p>
         </div>
 

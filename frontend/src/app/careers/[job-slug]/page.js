@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, notFound } from 'next/navigation';
 import { careersData } from '@/data/careersData';
+import { API_BASE_URL } from '@/config/api';
 import {
   Briefcase,
   MapPin,
@@ -25,7 +26,7 @@ export default function DynamicJobPage() {
   const [job, setJob] = useState(() => careersData.find((j) => j.slug === jobSlug) || null);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/api/content/jobs')
+    fetch(`${API_BASE_URL}/api/content/jobs`)
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {
@@ -73,8 +74,8 @@ export default function DynamicJobPage() {
     setLoading(true);
 
     try {
-      // Connects live to our Express backend API endpoint (Section 22 & 27)
-      const res = await fetch('http://127.0.0.1:5000/api/applications', {
+      // Connects live to our Express backend API endpoint
+      const res = await fetch(`${API_BASE_URL}/api/applications`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

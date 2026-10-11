@@ -19,8 +19,26 @@ connectDB().then(() => {
 });
 
 // 4. Global Middleware
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',').map((u) => u.trim())
+  : ['http://localhost:3000', 'http://127.0.0.1:3000'];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Allow server-to-server, mobile, or tool requests without origin
+    if (!origin) return callback(null, true);
+    
+    // Check allowed origins, wildcard, or vercel preview domains
+    const isAllowed =
+      allowedOrigins.includes(origin) ||
+      allowedOrigins.includes('*') ||
+      /\.vercel\.app$/.test(origin);
+
+    if (isAllowed || process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS policy: Origin ${origin} not allowed.`));
+  },
   credentials: true
 }));
 app.use(express.json());

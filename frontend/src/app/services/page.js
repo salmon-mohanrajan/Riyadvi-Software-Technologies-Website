@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { servicesData } from '@/data/servicesData';
+import { API_BASE_URL } from '@/config/api';
 import {
   Globe,
   Smartphone,
@@ -29,7 +30,7 @@ export const metadata = {
 
 async function getServices() {
   try {
-    const res = await fetch('http://127.0.0.1:5000/api/content/services', { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}/api/content/services`, { cache: 'no-store' });
     const json = await res.json();
     if (json.success && json.data?.length > 0) return json.data;
   } catch (err) {}

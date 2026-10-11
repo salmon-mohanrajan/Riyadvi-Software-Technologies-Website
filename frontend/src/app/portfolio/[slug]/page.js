@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { portfolioData } from '@/data/portfolioData';
+import { API_BASE_URL } from '@/config/api';
 import PerfumeBottle3D from '@/components/3d/PerfumeBottle3D';
 import PearlHousing3D from '@/components/3d/PearlHousing3D';
 import {
@@ -39,7 +40,7 @@ async function CaseStudyContent({ params }) {
   const { slug } = await params;
   let project = null;
   try {
-    const res = await fetch('http://127.0.0.1:5000/api/content/projects', { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}/api/content/projects`, { cache: 'no-store' });
     const json = await res.json();
     if (json.success && json.data) {
       project = json.data.find((p) => p.slug === slug);

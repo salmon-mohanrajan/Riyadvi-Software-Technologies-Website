@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { servicesData } from '@/data/servicesData';
 import { portfolioData } from '@/data/portfolioData';
+import { API_BASE_URL } from '@/config/api';
 import {
   Globe,
   Smartphone,
@@ -54,7 +55,7 @@ async function ServiceContent({ params }) {
   let service = null;
 
   try {
-    const res = await fetch('http://127.0.0.1:5000/api/content/services', { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}/api/content/services`, { cache: 'no-store' });
     const json = await res.json();
     if (json.success && json.data) {
       service = json.data.find((s) => s.slug === slug);

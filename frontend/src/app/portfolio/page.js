@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { portfolioData } from '@/data/portfolioData';
+import { API_BASE_URL } from '@/config/api';
 import {
   Sparkles,
   ArrowRight,
@@ -17,7 +18,7 @@ export const metadata = {
 
 async function getProjects() {
   try {
-    const res = await fetch('http://127.0.0.1:5000/api/content/projects', { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}/api/content/projects`, { cache: 'no-store' });
     const json = await res.json();
     if (json.success && json.data?.length > 0) return json.data;
   } catch (err) {}

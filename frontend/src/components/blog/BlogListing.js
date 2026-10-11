@@ -15,6 +15,7 @@ import {
   ChevronRight 
 } from 'lucide-react';
 import { blogCategories, blogData } from '@/data/blogData';
+import { API_BASE_URL } from '@/config/api';
 
 export default function BlogListing() {
   const [articles, setArticles] = useState(blogData);
@@ -22,7 +23,7 @@ export default function BlogListing() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/api/content/articles')
+    fetch(`${API_BASE_URL}/api/content/articles`)
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data?.length > 0) {

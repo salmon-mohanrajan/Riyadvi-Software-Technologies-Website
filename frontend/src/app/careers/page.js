@@ -7,6 +7,7 @@ import {
   careerDepartments,
   careerExperienceLevels,
 } from '@/data/careersData';
+import { API_BASE_URL } from '@/config/api';
 import {
   Briefcase,
   MapPin,
@@ -23,7 +24,7 @@ export default function CareersIndexPage() {
   const [selectedExp, setSelectedExp] = useState('All');
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/api/content/jobs')
+    fetch(`${API_BASE_URL}/api/content/jobs`)
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data?.length > 0) {
