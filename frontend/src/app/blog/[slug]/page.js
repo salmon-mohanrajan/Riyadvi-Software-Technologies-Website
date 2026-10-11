@@ -44,7 +44,18 @@ export async function generateMetadata({ params }) {
 }
 
 async function ArticleContent({ slug }) {
-  const post = blogData.find((p) => p.slug === slug);
+  let post = null;
+  try {
+    const res = await fetch('http://127.0.0.1:5000/api/content/articles', { cache: 'no-store' });
+    const json = await res.json();
+    if (json.success && json.data) {
+      post = json.data.find((p) => p.slug === slug);
+    }
+  } catch (err) {}
+
+  if (!post) {
+    post = blogData.find((p) => p.slug === slug);
+  }
 
   if (!post) {
     notFound();

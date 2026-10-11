@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import leadRoutes from './routes/leadRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import contentRoutes from './routes/contentRoutes.js';
+import { seedInitialContent } from './config/seedContent.js';
 
 // 1. Load environment variables
 dotenv.config();
@@ -11,8 +13,10 @@ dotenv.config();
 // 2. Initialize Express application
 const app = express();
 
-// 3. Connect to Database
-connectDB();
+// 3. Connect to Database & Seed Initial Content
+connectDB().then(() => {
+  seedInitialContent();
+});
 
 // 4. Global Middleware
 app.use(cors({
@@ -35,6 +39,7 @@ app.get('/api/health', (req, res) => {
 // 6. Mount API Routes
 app.use('/api', leadRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/content', contentRoutes);
 
 // 6. Start Server
 const PORT = process.env.PORT || 5000;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   careersData,
@@ -18,14 +18,26 @@ import {
 } from 'lucide-react';
 
 export default function CareersIndexPage() {
+  const [jobs, setJobs] = useState(careersData);
   const [selectedDept, setSelectedDept] = useState('All');
   const [selectedExp, setSelectedExp] = useState('All');
 
-  const filteredJobs = careersData.filter((job) => {
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/api/content/jobs')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data?.length > 0) {
+          setJobs(json.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const filteredJobs = jobs.filter((job) => {
     const matchDept = selectedDept === 'All' || job.department === selectedDept;
     const matchExp =
       selectedExp === 'All' ||
-      job.experience.toLowerCase().includes(selectedExp.toLowerCase().split(' ')[0]);
+      job.experience?.toLowerCase().includes(selectedExp.toLowerCase().split(' ')[0]);
     return matchDept && matchExp;
   });
 
@@ -35,7 +47,7 @@ export default function CareersIndexPage() {
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
           <Briefcase className="w-3.5 h-3.5" />
-          <span>Talent & Culture — Section 22</span>
+          <span>Talent & Engineering Culture</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
           Join the Architects of <span className="text-gradient-gold">Digital Transformation</span>

@@ -37,7 +37,18 @@ export async function generateMetadata({ params }) {
 
 async function CaseStudyContent({ params }) {
   const { slug } = await params;
-  const project = portfolioData.find((p) => p.slug === slug);
+  let project = null;
+  try {
+    const res = await fetch('http://127.0.0.1:5000/api/content/projects', { cache: 'no-store' });
+    const json = await res.json();
+    if (json.success && json.data) {
+      project = json.data.find((p) => p.slug === slug);
+    }
+  } catch (err) {}
+
+  if (!project) {
+    project = portfolioData.find((p) => p.slug === slug);
+  }
 
   if (!project) {
     notFound();

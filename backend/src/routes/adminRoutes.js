@@ -4,24 +4,40 @@ import Consultation from '../models/Consultation.js';
 import HealthCheckup from '../models/HealthCheckup.js';
 import LeadMagnet from '../models/LeadMagnet.js';
 import CareerApplication from '../models/CareerApplication.js';
+import Service from '../models/Service.js';
+import Project from '../models/Project.js';
+import Article from '../models/Article.js';
+import Job from '../models/Job.js';
 
 const router = express.Router();
 
 /**
  * 1. GET /api/admin/metrics
- * Returns aggregated lead counts across all 5 categories for the Admin Dashboard overview.
- * Required by Assignment Section 28.
+ * Returns aggregated lead and content counts across all categories for the Admin Dashboard overview.
  */
 router.get('/metrics', async (req, res) => {
   try {
-    const [inquiries, consultations, healthCheckups, leadMagnets, applications] =
-      await Promise.all([
-        Inquiry.countDocuments(),
-        Consultation.countDocuments(),
-        HealthCheckup.countDocuments(),
-        LeadMagnet.countDocuments(),
-        CareerApplication.countDocuments(),
-      ]);
+    const [
+      inquiries,
+      consultations,
+      healthCheckups,
+      leadMagnets,
+      applications,
+      servicesCount,
+      projectsCount,
+      articlesCount,
+      jobsCount,
+    ] = await Promise.all([
+      Inquiry.countDocuments(),
+      Consultation.countDocuments(),
+      HealthCheckup.countDocuments(),
+      LeadMagnet.countDocuments(),
+      CareerApplication.countDocuments(),
+      Service.countDocuments(),
+      Project.countDocuments(),
+      Article.countDocuments(),
+      Job.countDocuments(),
+    ]);
 
     const totalLeads = inquiries + consultations + healthCheckups + leadMagnets + applications;
 
@@ -34,6 +50,10 @@ router.get('/metrics', async (req, res) => {
         healthCheckups,
         leadMagnets,
         applications,
+        servicesCount,
+        projectsCount,
+        articlesCount,
+        jobsCount,
       },
     });
   } catch (error) {

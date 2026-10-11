@@ -94,7 +94,7 @@ export default function WhyRiyadvi() {
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Company Journey — Section 15</span>
+            <span>Company Journey & Evolution</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
             Pioneering Digital Solutions <span className="text-gradient-gold">Since 2021</span>
@@ -211,7 +211,7 @@ export default function WhyRiyadvi() {
           <div className="lg:col-span-8 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold">
               <Activity className="w-3.5 h-3.5" />
-              <span>Interactive Lead Diagnostic — Section 16</span>
+              <span>Interactive Software Diagnostic</span>
             </div>
             <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
               Is Your Business Ready for Its{' '}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, notFound } from 'next/navigation';
 import { careersData } from '@/data/careersData';
@@ -22,7 +22,19 @@ import {
 export default function DynamicJobPage() {
   const params = useParams();
   const jobSlug = params['job-slug'];
-  const job = careersData.find((j) => j.slug === jobSlug);
+  const [job, setJob] = useState(() => careersData.find((j) => j.slug === jobSlug) || null);
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/api/content/jobs')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          const found = json.data.find((j) => j.slug === jobSlug);
+          if (found) setJob(found);
+        }
+      })
+      .catch(() => {});
+  }, [jobSlug]);
 
   const [formData, setFormData] = useState({
     name: '',

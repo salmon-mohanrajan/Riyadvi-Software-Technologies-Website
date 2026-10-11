@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -17,22 +17,34 @@ import {
 import { blogCategories, blogData } from '@/data/blogData';
 
 export default function BlogListing() {
+  const [articles, setArticles] = useState(blogData);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/api/content/articles')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data?.length > 0) {
+          setArticles(json.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   // Filter articles based on category and search query
-  const filteredArticles = blogData.filter((post) => {
+  const filteredArticles = articles.filter((post) => {
     const matchesCategory =
       selectedCategory === 'All' || post.category === selectedCategory;
     const matchesSearch =
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (post.tags || []).some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return matchesCategory && matchesSearch;
   });
 
-  const featuredPost = blogData.find((p) => p.featured) || blogData[0];
+  const featuredPost = articles.find((p) => p.featured) || articles[0];
 
   return (
     <div className="min-h-screen bg-black text-white pt-32 pb-24 relative overflow-hidden">

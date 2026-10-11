@@ -27,27 +27,37 @@ export const metadata = {
     'Explore our 6 core capabilities: Web Development, App Development, Digital Marketing, AR/VR Solutions, 3D Modeling, and UI/UX Design.',
 };
 
-export default function ServicesIndexPage() {
+async function getServices() {
+  try {
+    const res = await fetch('http://127.0.0.1:5000/api/content/services', { cache: 'no-store' });
+    const json = await res.json();
+    if (json.success && json.data?.length > 0) return json.data;
+  } catch (err) {}
+  return servicesData;
+}
+
+export default async function ServicesIndexPage() {
+  const services = await getServices();
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Section 19 — Core Services Directory</span>
+          <span>Core Services Directory</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
           Comprehensive <span className="text-gradient-gold">Digital Capabilities</span>
         </h1>
         <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-          Explore our six core technology pillars. Each discipline is engineered to merge high-velocity
+          Explore our core technology pillars. Each discipline is engineered to merge high-velocity
           performance with interactive 3D WebGL immersion and measurable business growth.
         </p>
       </div>
 
-      {/* 6 Services Grid */}
+      {/* Services Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {servicesData.map((service, index) => {
+        {services.map((service, index) => {
           const Icon = iconMap[service.iconName] || Globe;
 
           return (

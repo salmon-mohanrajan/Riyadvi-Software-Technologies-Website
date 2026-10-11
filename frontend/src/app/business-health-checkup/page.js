@@ -125,7 +125,7 @@ export default function BusinessHealthCheckupPage() {
       <div className="text-center space-y-4 mb-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
           <Activity className="w-3.5 h-3.5" />
-          <span>Interactive Diagnostic — Section 16</span>
+          <span>Interactive Business Diagnostic</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
           Is Your Business Ready for Its{' '}

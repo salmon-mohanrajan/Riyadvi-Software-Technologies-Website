@@ -199,6 +199,10 @@ The database layer utilizes **MongoDB** managed through **Mongoose 8** schemas w
 3. **`HealthCheckup.js`**: Stores 6-pillar business diagnostic logs (`answers: { q1, q2, q3, q4, q5, q6 }`, computed `calculatedScore: Number`, `company`, `email`, `contactPerson`).
 4. **`LeadMagnet.js`**: Tracks Project Planning Guide downloads (`name`, `email`, `company`, `role`, `estimatedProjectScope`).
 5. **`CareerApplication.js`**: Stores job applicants (`fullName`, `email`, `phone`, `position`, `jobSlug`, `portfolioUrl`, `resumeUrl`, `message`, `status`).
+6. **`Service.js`**: Manages core capabilities (`slug`, `title`, `tagline`, `shortDescription`, `problem`, `solution`, `features`, `techStack`, `process`).
+7. **`Project.js`**: Manages portfolio case studies & 3D models (`slug`, `title`, `client`, `industry`, `has3DExperience`, `interactive3DType`, `shortDesc`, `challenge`, `solution`, `technologies`, `results`).
+8. **`Article.js`**: Manages technical blog articles (`slug`, `title`, `category`, `publishedAt`, `readTime`, `author`, `excerpt`, `tags`, `content`).
+9. **`Job.js`**: Manages career opportunities (`slug`, `title`, `department`, `designation`, `experience`, `location`, `type`, `salaryRange`, `overview`).
 
 ### Connecting to MongoDB:
 * **Local Instance:** Ensure MongoDB is running locally (`mongod`). The app automatically connects to `mongodb://127.0.0.1:27017/riyadvi_db`.
@@ -234,6 +238,27 @@ Base URL: **`http://127.0.0.1:5000/api`**
 | `GET` | `/admin/health-checkups` | Retrieve diagnostic leads & scores | None | `200 OK` |
 | `GET` | `/admin/lead-magnets` | Retrieve guide registrants | None | `200 OK` |
 | `GET` | `/admin/applications` | Retrieve job applicants | None | `200 OK` |
+
+### Content Management System (CRUD) Endpoints
+
+| Method | Endpoint | Description | Payload / Params | Status Code |
+|---|---|---|---|---|
+| `GET` | `/content/services` | Retrieve all services | None | `200 OK` |
+| `POST` | `/content/services` | Create new service | Service schema body | `201 Created` |
+| `PUT` | `/content/services/:id` | Update service by ID | `:id` param, updated fields | `200 OK` |
+| `DELETE` | `/content/services/:id` | Delete service | `:id` param | `200 OK` |
+| `GET` | `/content/projects` | Retrieve all portfolio projects | None | `200 OK` |
+| `POST` | `/content/projects` | Create new project | Project schema body | `201 Created` |
+| `PUT` | `/content/projects/:id` | Update project by ID | `:id` param, updated fields | `200 OK` |
+| `DELETE` | `/content/projects/:id` | Delete project | `:id` param | `200 OK` |
+| `GET` | `/content/articles` | Retrieve all blog articles | None | `200 OK` |
+| `POST` | `/content/articles` | Create new article | Article schema body | `201 Created` |
+| `PUT` | `/content/articles/:id` | Update article by ID | `:id` param, updated fields | `200 OK` |
+| `DELETE` | `/content/articles/:id` | Delete article | `:id` param | `200 OK` |
+| `GET` | `/content/jobs` | Retrieve all job postings | None | `200 OK` |
+| `POST` | `/content/jobs` | Create new job posting | Job schema body | `201 Created` |
+| `PUT` | `/content/jobs/:id` | Update job by ID | `:id` param, updated fields | `200 OK` |
+| `DELETE` | `/content/jobs/:id` | Delete job posting | `:id` param | `200 OK` |
 
 ---
 

@@ -71,7 +71,7 @@ export default function ContactPage() {
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
           <Mail className="w-3.5 h-3.5" />
-          <span>Connect With Our Architects — Section 23</span>
+          <span>Connect With Our Architects</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
           Let’s Build Something <span className="text-gradient-gold">Extraordinary</span>

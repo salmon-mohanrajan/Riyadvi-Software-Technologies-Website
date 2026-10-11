@@ -15,14 +15,24 @@ export const metadata = {
     'Explore our enterprise case studies: Wanaromah 3D, Laxmi Astro AI, Pearl Housing, Puratap IoT, and Tony & Guy.',
 };
 
-export default function PortfolioIndexPage() {
+async function getProjects() {
+  try {
+    const res = await fetch('http://127.0.0.1:5000/api/content/projects', { cache: 'no-store' });
+    const json = await res.json();
+    if (json.success && json.data?.length > 0) return json.data;
+  } catch (err) {}
+  return portfolioData;
+}
+
+export default async function PortfolioIndexPage() {
+  const projects = await getProjects();
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Section 18 — Enterprise Case Studies</span>
+          <span>Enterprise Case Studies & 3D Showcases</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
           Proven Solutions, <span className="text-gradient-gold">Measurable Scale</span>
@@ -35,7 +45,7 @@ export default function PortfolioIndexPage() {
 
       {/* Case Studies Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {portfolioData.map((project) => (
+        {projects.map((project) => (
           <div
             key={project.slug}
             className="glass-panel glass-panel-hover rounded-3xl p-7 flex flex-col justify-between border border-white/10 group relative"

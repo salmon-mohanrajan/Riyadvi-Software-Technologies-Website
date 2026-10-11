@@ -126,7 +126,7 @@ export default function DigitalTransformation() {
       <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Our Methodology — Section 12</span>
+          <span>Transformation Methodology</span>
         </div>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
           The Riyadvi <span className="text-gradient-gold">Digital Transformation</span> Framework

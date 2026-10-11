@@ -51,7 +51,19 @@ export async function generateMetadata({ params }) {
 
 async function ServiceContent({ params }) {
   const { slug } = await params;
-  const service = servicesData.find((s) => s.slug === slug);
+  let service = null;
+
+  try {
+    const res = await fetch('http://127.0.0.1:5000/api/content/services', { cache: 'no-store' });
+    const json = await res.json();
+    if (json.success && json.data) {
+      service = json.data.find((s) => s.slug === slug);
+    }
+  } catch (err) {}
+
+  if (!service) {
+    service = servicesData.find((s) => s.slug === slug);
+  }
 
   if (!service) {
     notFound();
