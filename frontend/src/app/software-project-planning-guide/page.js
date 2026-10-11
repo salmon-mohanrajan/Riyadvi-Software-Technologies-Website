@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Loader2,
   ExternalLink,
+  X,
 } from 'lucide-react';
 
 export default function SoftwareProjectPlanningGuidePage() {
@@ -27,6 +28,7 @@ export default function SoftwareProjectPlanningGuidePage() {
   const [loading, setLoading] = useState(false);
   const [downloadReady, setDownloadReady] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [downloadModalOpen, setDownloadModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -265,9 +267,9 @@ export default function SoftwareProjectPlanningGuidePage() {
                 href="#download-simulated"
                 onClick={(e) => {
                   e.preventDefault();
-                  alert('Download initiated: Software Project Planning Guide (2026 Edition)');
+                  setDownloadModalOpen(true);
                 }}
-                className="w-full py-4 rounded-xl bg-[#D4AF37] hover:bg-[#F3E5AB] text-black font-extrabold text-xs uppercase tracking-wider transition-all shadow-xl shadow-[#D4AF37]/30 flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-xl bg-[#D4AF37] hover:bg-[#F3E5AB] text-black font-extrabold text-xs uppercase tracking-wider transition-all shadow-xl shadow-[#D4AF37]/30 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span>Save PDF to Device</span>
@@ -285,6 +287,46 @@ export default function SoftwareProjectPlanningGuidePage() {
           )}
         </div>
       </div>
+
+      {/* Custom Download Confirmation Dialogue Box */}
+      {downloadModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md bg-[#0C0E17] border border-[#D4AF37]/30 rounded-3xl p-6 shadow-2xl shadow-black/90 space-y-5">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-2xl bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37]">
+                  <Download className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Executive Guide Dispatched</h3>
+                  <p className="text-xs text-[#D4AF37] font-mono">2026 Edition (4.2 MB PDF)</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setDownloadModalOpen(false)}
+                className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-white/5"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-300 leading-relaxed">
+              Your software planning playbook has been generated. Inside you will find architectural scoping frameworks, milestone scheduling templates, and enterprise budget estimations for modern web and mobile deployments.
+            </p>
+
+            <div className="pt-2 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setDownloadModalOpen(false)}
+                className="px-6 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#F3E5AB] text-black text-xs font-bold transition-all shadow-lg shadow-[#D4AF37]/25"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

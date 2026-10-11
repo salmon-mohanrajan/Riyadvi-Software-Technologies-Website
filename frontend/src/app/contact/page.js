@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   Clock,
   Loader2,
+  X,
 } from 'lucide-react';
 
 export default function ContactPage() {
@@ -30,6 +31,7 @@ export default function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [calendlyModalOpen, setCalendlyModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -118,9 +120,9 @@ export default function ContactPage() {
                 href="#calendly-session"
                 onClick={(e) => {
                   e.preventDefault();
-                  alert('Calendly Scheduler: 30-Minute Architecture Consultation slot opened.');
+                  setCalendlyModalOpen(true);
                 }}
-                className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition-colors group"
+                className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition-colors group cursor-pointer"
               >
                 <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] group-hover:scale-105 transition-transform">
                   <Calendar className="w-5 h-5" />
@@ -329,6 +331,71 @@ export default function ContactPage() {
           )}
         </div>
       </div>
+
+      {/* Custom Calendly Strategy Session Dialogue Box */}
+      {calendlyModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md bg-[#0C0E17] border border-[#D4AF37]/30 rounded-3xl p-6 shadow-2xl shadow-black/90 space-y-5">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-2xl bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37]">
+                  <Calendar className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">30-Min Strategy Call</h3>
+                  <p className="text-xs text-[#D4AF37] font-mono">Architecture &amp; Growth Discovery</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setCalendlyModalOpen(false)}
+                className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-white/5"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-300 leading-relaxed">
+              Connect directly with our Lead Systems Architect. We will review your legacy software bottlenecks, 3D WebGL requirements, or AI pipeline feasibility in a focused 30-minute session.
+            </p>
+
+            <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-1.5 text-xs text-gray-400">
+              <div className="flex justify-between">
+                <span>Duration:</span>
+                <span className="text-white font-semibold">30 Minutes</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Format:</span>
+                <span className="text-white font-semibold">Google Meet / Zoom</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Availability:</span>
+                <span className="text-[#D4AF37] font-semibold">Mon – Fri (Slots Available)</span>
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setCalendlyModalOpen(false)}
+                className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300 transition-colors"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCalendlyModalOpen(false);
+                  window.open('https://calendly.com', '_blank');
+                }}
+                className="px-6 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#F3E5AB] text-black text-xs font-bold transition-all shadow-lg shadow-[#D4AF37]/25"
+              >
+                Select Slot on Calendly →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

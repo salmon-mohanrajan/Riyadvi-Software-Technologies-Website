@@ -23,7 +23,9 @@ import {
   BookOpen,
   Box,
   X,
-  AlertCircle
+  AlertCircle,
+  AlertTriangle,
+  Info
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -62,6 +64,45 @@ export default function AdminDashboardPage() {
 
   // Form State
   const [formData, setFormData] = useState({});
+
+  // Custom Interactive Dialog Modal (Replaces native browser alert and confirm)
+  const [dialog, setDialog] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'info', // 'info' | 'error' | 'success' | 'confirm'
+    onConfirm: null,
+    confirmText: 'Dismiss',
+    cancelText: 'Cancel',
+  });
+
+  const showDialog = (title, message, type = 'info') => {
+    setDialog({
+      isOpen: true,
+      title,
+      message,
+      type,
+      onConfirm: null,
+      confirmText: 'Dismiss',
+      cancelText: 'Cancel',
+    });
+  };
+
+  const showConfirm = (title, message, onConfirmAction, confirmText = 'Delete Record') => {
+    setDialog({
+      isOpen: true,
+      title,
+      message,
+      type: 'confirm',
+      onConfirm: onConfirmAction,
+      confirmText,
+      cancelText: 'Cancel',
+    });
+  };
+
+  const closeDialog = () => {
+    setDialog((prev) => ({ ...prev, isOpen: false }));
+  };
 
   // 1. Fetch metrics & all records from backend
   const fetchData = async () => {
@@ -210,10 +251,17 @@ export default function AdminDashboardPage() {
     setModalOpen(true);
   };
 
-  // Delete an item
-  const handleDelete = async (type, id) => {
-    if (!window.confirm(`Are you sure you want to delete this ${type}?`)) return;
+  // Delete an item with custom confirmation dialog
+  const handleDelete = (type, id) => {
+    showConfirm(
+      `Delete ${type.charAt(0).toUpperCase() + type.slice(1)}`,
+      `Are you sure you want to permanently delete this ${type}? This action cannot be undone.`,
+      () => executeDelete(type, id),
+      'Delete'
+    );
+  };
 
+  const executeDelete = async (type, id) => {
     try {
       const endpointMap = {
         service: `${API_BASE_URL}/api/content/services/${id}`,
@@ -228,9 +276,9 @@ export default function AdminDashboardPage() {
       if (!res.ok) {
         if (contentType.includes('application/json')) {
           const errJson = await res.json();
-          alert(`Delete failed (${res.status}): ${errJson.error || errJson.message || 'Error deleting item'}`);
+          showDialog('Delete Failed', errJson.error || errJson.message || 'Error deleting item.', 'error');
         } else {
-          alert(`Delete failed (${res.status}): Server returned non-JSON response. Please verify backend availability.`);
+          showDialog('Delete Failed', 'Server returned non-JSON response. Please verify backend availability.', 'error');
         }
         return;
       }
@@ -246,10 +294,10 @@ export default function AdminDashboardPage() {
         setFeedbackMsg(`Successfully deleted ${type}.`);
         setTimeout(() => setFeedbackMsg(''), 3000);
       } else {
-        alert(json.error || 'Failed to delete');
+        showDialog('Delete Failed', json.error || 'Failed to delete record.', 'error');
       }
     } catch (err) {
-      alert('Delete request failed: ' + err.message);
+      showDialog('Delete Error', 'Delete request failed: ' + err.message, 'error');
     }
   };
 
@@ -313,15 +361,17 @@ export default function AdminDashboardPage() {
       if (!res.ok) {
         if (contentType.includes('application/json')) {
           const errJson = await res.json();
-          alert(`Server Error (${res.status}): ${errJson.error || errJson.message || 'Operation failed'}`);
+          showDialog('Server Error', errJson.error || errJson.message || 'Operation failed. Please verify required fields.', 'error');
         } else {
-          alert(
-            `Backend Connection Notice (${res.status}): The API did not return JSON.\n\n` +
+          showDialog(
+            'Backend Connection Notice',
+            `The API did not return JSON (Status: ${res.status}).\n\n` +
             `Target endpoint: ${url}\n\n` +
             `Common causes:\n` +
             `1. Render free-tier sleep: If backend was idle for 15 minutes, Render takes 30-50s to boot up. Please retry in 30 seconds.\n` +
             `2. In Vercel Environment Variables, ensure NEXT_PUBLIC_API_URL is set to your Render backend URL (e.g. https://your-backend.onrender.com).\n` +
-            `3. If NEXT_PUBLIC_API_URL ended with '/api', redeploy or refresh after updating it.`
+            `3. If NEXT_PUBLIC_API_URL ended with '/api', redeploy or refresh after updating it.`,
+            'info'
           );
         }
         return;
@@ -335,10 +385,10 @@ export default function AdminDashboardPage() {
         setModalOpen(false);
         fetchData(); // Refresh table state
       } else {
-        alert(json.error || 'Operation failed');
+        showDialog('Operation Failed', json.error || 'Operation failed', 'error');
       }
     } catch (err) {
-      alert('Error submitting form: ' + err.message);
+      showDialog('Error Submitting Form', err.message, 'error');
     }
   };
 
@@ -1280,6 +1330,77 @@ export default function AdminDashboardPage() {
               </div>
 
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==================================================================== */}
+      {/* CUSTOM DIALOGUE MODAL (Replaces browser alert & confirm completely) */}
+      {/* ==================================================================== */}
+      {dialog.isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md bg-[#0C0E17] border border-white/20 rounded-3xl p-6 shadow-2xl shadow-black/90 space-y-5">
+            {/* Header Icon + Title */}
+            <div className="flex items-start gap-4">
+              <div
+                className={`p-3 rounded-2xl flex-shrink-0 ${
+                  dialog.type === 'error'
+                    ? 'bg-rose-500/15 border border-rose-500/30 text-rose-400'
+                    : dialog.type === 'confirm'
+                    ? 'bg-amber-500/15 border border-amber-500/30 text-amber-400'
+                    : dialog.type === 'success'
+                    ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-400'
+                    : 'bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37]'
+                }`}
+              >
+                {dialog.type === 'error' && <AlertTriangle className="w-6 h-6" />}
+                {dialog.type === 'confirm' && <AlertCircle className="w-6 h-6" />}
+                {dialog.type === 'success' && <CheckCircle2 className="w-6 h-6" />}
+                {dialog.type === 'info' && <Info className="w-6 h-6" />}
+              </div>
+              <div className="space-y-1.5 flex-1 min-w-0">
+                <h3 className="text-lg font-bold text-white tracking-tight">
+                  {dialog.title}
+                </h3>
+                <div className="text-xs text-gray-300 leading-relaxed whitespace-pre-line max-h-64 overflow-y-auto pr-1">
+                  {dialog.message}
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+              {dialog.type === 'confirm' ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={closeDialog}
+                    className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300 transition-colors"
+                  >
+                    {dialog.cancelText || 'Cancel'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const action = dialog.onConfirm;
+                      closeDialog();
+                      if (action) action();
+                    }}
+                    className="px-5 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold transition-colors shadow-lg shadow-rose-500/20"
+                  >
+                    {dialog.confirmText || 'Confirm'}
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={closeDialog}
+                  className="px-6 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#F3E5AB] text-black text-xs font-bold transition-all shadow-lg shadow-[#D4AF37]/20"
+                >
+                  {dialog.confirmText || 'Dismiss'}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
