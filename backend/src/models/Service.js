@@ -33,11 +33,15 @@ const serviceSchema = new mongoose.Schema(
     },
     problem: {
       type: String,
-      required: true,
+      default: function () {
+        return this.shortDescription || 'Legacy architectural constraints.';
+      },
     },
     solution: {
       type: String,
-      required: true,
+      default: function () {
+        return this.shortDescription || 'Engineered scalable full-stack capabilities.';
+      },
     },
     features: [
       {

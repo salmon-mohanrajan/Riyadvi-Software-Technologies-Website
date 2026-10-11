@@ -282,8 +282,16 @@ export default function AdminDashboardPage() {
       if (modalType === 'service' && payload.techStack) {
         payload.techStack = payload.techStack.split(',').map((s) => s.trim()).filter(Boolean);
       }
-      if (modalType === 'project' && payload.technologies) {
-        payload.technologies = payload.technologies.split(',').map((s) => s.trim()).filter(Boolean);
+      if (modalType === 'project') {
+        if (!payload.challenge && payload.shortDesc) {
+          payload.challenge = payload.shortDesc;
+        }
+        if (!payload.solution && payload.shortDesc) {
+          payload.solution = payload.shortDesc;
+        }
+        if (payload.technologies && typeof payload.technologies === 'string') {
+          payload.technologies = payload.technologies.split(',').map((s) => s.trim()).filter(Boolean);
+        }
       }
       if (modalType === 'article') {
         if (payload.tags) {
@@ -1077,6 +1085,28 @@ export default function AdminDashboardPage() {
                       onChange={(e) => setFormData({ ...formData, shortDesc: e.target.value })}
                       className="w-full bg-black/70 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
                     />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-gray-300 font-semibold mb-1">Client Challenge</label>
+                      <textarea
+                        rows={2}
+                        value={formData.challenge || ''}
+                        onChange={(e) => setFormData({ ...formData, challenge: e.target.value })}
+                        className="w-full bg-black/70 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                        placeholder="Architectural challenge..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 font-semibold mb-1">Riyadvi Solution</label>
+                      <textarea
+                        rows={2}
+                        value={formData.solution || ''}
+                        onChange={(e) => setFormData({ ...formData, solution: e.target.value })}
+                        className="w-full bg-black/70 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                        placeholder="Engineered solution..."
+                      />
+                    </div>
                   </div>
                   <div className="flex items-center gap-6 py-2">
                     <label className="flex items-center gap-2 cursor-pointer text-white">

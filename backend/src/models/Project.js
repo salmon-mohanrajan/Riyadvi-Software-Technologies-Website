@@ -42,11 +42,15 @@ const projectSchema = new mongoose.Schema(
     },
     challenge: {
       type: String,
-      required: true,
+      default: function () {
+        return this.shortDesc || 'Engineering high-scale digital architecture.';
+      },
     },
     solution: {
       type: String,
-      required: true,
+      default: function () {
+        return this.shortDesc || 'Engineered custom full-stack solutions with 60 FPS performance.';
+      },
     },
     technologies: [String],
     results: [

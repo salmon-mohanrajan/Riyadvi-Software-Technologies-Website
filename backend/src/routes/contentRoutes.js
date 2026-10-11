@@ -94,6 +94,12 @@ router.post('/projects', async (req, res) => {
     if (!body.slug && body.title) {
       body.slug = slugify(body.title);
     }
+    if (!body.challenge) {
+      body.challenge = body.shortDesc || 'Engineering high-scale digital architecture.';
+    }
+    if (!body.solution) {
+      body.solution = body.shortDesc || 'Engineered custom full-stack solutions with 60 FPS performance.';
+    }
     const project = await Project.create(body);
     res.status(201).json({ success: true, data: project });
   } catch (err) {
