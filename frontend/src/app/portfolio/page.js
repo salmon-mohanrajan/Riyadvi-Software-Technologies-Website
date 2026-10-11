@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { portfolioData } from '@/data/portfolioData';
 import { API_BASE_URL } from '@/config/api';
@@ -25,27 +26,11 @@ async function getProjects() {
   return portfolioData;
 }
 
-export default async function PortfolioIndexPage() {
+async function PortfolioGrid() {
   const projects = await getProjects();
-  return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
-      {/* Header */}
-      <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Enterprise Case Studies & 3D Showcases</span>
-        </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-          Proven Solutions, <span className="text-gradient-gold">Measurable Scale</span>
-        </h1>
-        <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-          From WebGL 3D flagship boutiques to high-concurrency predictive AI platforms. Explore how
-          we transform business ambition into engineered market leadership.
-        </p>
-      </div>
 
-      {/* Case Studies Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project) => (
           <div
             key={project.slug}
@@ -110,7 +95,45 @@ export default async function PortfolioIndexPage() {
             </div>
           </div>
         ))}
+    </div>
+  );
+}
+
+function PortfolioLoadingSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[1, 2, 3, 4, 5, 6].map((n) => (
+        <div
+          key={n}
+          className="glass-panel rounded-3xl p-7 border border-white/10 h-80 animate-pulse bg-white/5"
+        />
+      ))}
+    </div>
+  );
+}
+
+export default function PortfolioIndexPage() {
+  return (
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
+      {/* Header */}
+      <div className="text-center max-w-3xl mx-auto space-y-4">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Enterprise Case Studies & 3D Showcases</span>
+        </div>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Proven Solutions, <span className="text-gradient-gold">Measurable Scale</span>
+        </h1>
+        <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+          From WebGL 3D flagship boutiques to high-concurrency predictive AI platforms. Explore how
+          we transform business ambition into engineered market leadership.
+        </p>
       </div>
+
+      {/* Case Studies Grid wrapped in Suspense */}
+      <Suspense fallback={<PortfolioLoadingSkeleton />}>
+        <PortfolioGrid />
+      </Suspense>
     </div>
   );
 }

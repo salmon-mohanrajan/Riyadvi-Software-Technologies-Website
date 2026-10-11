@@ -44,7 +44,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-async function ArticleContent({ slug }) {
+async function ArticleContent({ params }) {
+  const { slug } = await params;
   let post = null;
   try {
     const res = await fetch(`${API_BASE_URL}/api/content/articles`, { cache: 'no-store' });
@@ -255,9 +256,7 @@ async function ArticleContent({ slug }) {
   );
 }
 
-export default async function DynamicBlogPostPage({ params }) {
-  const { slug } = await params;
-
+export default function DynamicBlogPostPage(props) {
   return (
     <Suspense
       fallback={
@@ -269,7 +268,7 @@ export default async function DynamicBlogPostPage({ params }) {
         </div>
       }
     >
-      <ArticleContent slug={slug} />
+      <ArticleContent {...props} />
     </Suspense>
   );
 }

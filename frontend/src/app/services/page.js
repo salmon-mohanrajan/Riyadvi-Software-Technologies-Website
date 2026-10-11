@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { servicesData } from '@/data/servicesData';
 import { API_BASE_URL } from '@/config/api';
@@ -37,27 +38,11 @@ async function getServices() {
   return servicesData;
 }
 
-export default async function ServicesIndexPage() {
+async function ServicesGrid() {
   const services = await getServices();
-  return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
-      {/* Header */}
-      <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Core Services Directory</span>
-        </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-          Comprehensive <span className="text-gradient-gold">Digital Capabilities</span>
-        </h1>
-        <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-          Explore our core technology pillars. Each discipline is engineered to merge high-velocity
-          performance with interactive 3D WebGL immersion and measurable business growth.
-        </p>
-      </div>
 
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {services.map((service, index) => {
           const Icon = iconMap[service.iconName] || Globe;
 
@@ -110,9 +95,47 @@ export default async function ServicesIndexPage() {
                 </Link>
               </div>
             </div>
-          );
-        })}
+        );
+      })}
+    </div>
+  );
+}
+
+function ServicesLoadingSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[1, 2, 3, 4, 5, 6].map((n) => (
+        <div
+          key={n}
+          className="glass-panel rounded-3xl p-8 border border-white/10 h-72 animate-pulse bg-white/5"
+        />
+      ))}
+    </div>
+  );
+}
+
+export default function ServicesIndexPage() {
+  return (
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
+      {/* Header */}
+      <div className="text-center max-w-3xl mx-auto space-y-4">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] font-semibold tracking-wider uppercase">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Core Services Directory</span>
+        </div>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Comprehensive <span className="text-gradient-gold">Digital Capabilities</span>
+        </h1>
+        <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+          Explore our core technology pillars. Each discipline is engineered to merge high-velocity
+          performance with interactive 3D WebGL immersion and measurable business growth.
+        </p>
       </div>
+
+      {/* Services Grid wrapped in Suspense */}
+      <Suspense fallback={<ServicesLoadingSkeleton />}>
+        <ServicesGrid />
+      </Suspense>
 
       {/* Bottom Consultation Banner */}
       <div className="glass-panel rounded-3xl p-8 sm:p-12 border border-[#D4AF37]/30 text-center space-y-6">

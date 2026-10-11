@@ -34,7 +34,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} dark`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${poppins.variable} dark`}
+      data-scroll-behavior="smooth"
+    >
       <body className="min-h-screen flex flex-col bg-[#050608] text-gray-100 font-sans antialiased selection:bg-[#D4AF37] selection:text-black">
         <SmoothScroll>
           <Navbar />
