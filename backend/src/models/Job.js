@@ -21,7 +21,9 @@ const jobSchema = new mongoose.Schema(
     },
     designation: {
       type: String,
-      required: true,
+      default: function () {
+        return this.title;
+      },
     },
     experience: {
       type: String,

@@ -223,6 +223,18 @@ export default function AdminDashboardPage() {
       };
 
       const res = await fetch(endpointMap[type], { method: 'DELETE' });
+      const contentType = res.headers.get('content-type') || '';
+
+      if (!res.ok) {
+        if (contentType.includes('application/json')) {
+          const errJson = await res.json();
+          alert(`Delete failed (${res.status}): ${errJson.error || errJson.message || 'Error deleting item'}`);
+        } else {
+          alert(`Delete failed (${res.status}): Server returned non-JSON response. Please verify backend availability.`);
+        }
+        return;
+      }
+
       const json = await res.json();
 
       if (json.success) {
@@ -262,6 +274,11 @@ export default function AdminDashboardPage() {
 
       // Process payload formatting
       const payload = { ...formData };
+      if (modalType === 'job') {
+        if (!payload.designation && payload.title) {
+          payload.designation = payload.title;
+        }
+      }
       if (modalType === 'service' && payload.techStack) {
         payload.techStack = payload.techStack.split(',').map((s) => s.trim()).filter(Boolean);
       }
@@ -283,6 +300,24 @@ export default function AdminDashboardPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+
+      const contentType = res.headers.get('content-type') || '';
+      if (!res.ok) {
+        if (contentType.includes('application/json')) {
+          const errJson = await res.json();
+          alert(`Server Error (${res.status}): ${errJson.error || errJson.message || 'Operation failed'}`);
+        } else {
+          alert(
+            `Backend Connection Notice (${res.status}): The API did not return JSON.\n\n` +
+            `Target endpoint: ${url}\n\n` +
+            `Common causes:\n` +
+            `1. Render free-tier sleep: If backend was idle for 15 minutes, Render takes 30-50s to boot up. Please retry in 30 seconds.\n` +
+            `2. In Vercel Environment Variables, ensure NEXT_PUBLIC_API_URL is set to your Render backend URL (e.g. https://your-backend.onrender.com).\n` +
+            `3. If NEXT_PUBLIC_API_URL ended with '/api', redeploy or refresh after updating it.`
+          );
+        }
+        return;
+      }
 
       const json = await res.json();
 
@@ -1130,7 +1165,7 @@ export default function AdminDashboardPage() {
               {/* JOB SPECIFIC FIELDS */}
               {modalType === 'job' && (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-gray-300 font-semibold mb-1">Department</label>
                       <input
@@ -1140,6 +1175,16 @@ export default function AdminDashboardPage() {
                         onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                         className="w-full bg-black/70 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
                         placeholder="Engineering, Design, etc."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 font-semibold mb-1">Designation</label>
+                      <input
+                        type="text"
+                        value={formData.designation || ''}
+                        onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+                        className="w-full bg-black/70 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                        placeholder="e.g. Frontend Engineer"
                       />
                     </div>
                     <div>

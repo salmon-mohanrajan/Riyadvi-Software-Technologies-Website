@@ -208,6 +208,9 @@ router.post('/jobs', async (req, res) => {
     if (!body.slug && body.title) {
       body.slug = slugify(body.title);
     }
+    if (!body.designation && body.title) {
+      body.designation = body.title;
+    }
     const job = await Job.create(body);
     res.status(201).json({ success: true, data: job });
   } catch (err) {
